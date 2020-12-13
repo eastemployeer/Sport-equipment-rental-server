@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
 
   const data = await Database.raw('SELECT `id`, `typ_konta`, `imie`, `nazwisko`, `login`, `blokada` FROM `pracownik` WHERE `typ_konta` != "KIEROWNIK" ORDER BY `id` DESC LIMIT ? OFFSET ?', [limit, offset]);
   
-  res.json(data[0]).status(200);
+  res.status(200).json(data[0]);
 });
 
 export default router;

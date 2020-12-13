@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
 
   const totalRowsData = await Database.raw("SELECT COUNT(*) as totalRows FROM sprzet s JOIN rodzaj_sprzetu r ON (s.rodzaj_sprzetu=r.nazwa) WHERE s.blokada='dostepny' AND r.rodzaj_sezonu=?;", [sezon]);
   
-  res.json({rows: data[0], ...totalRowsData[0][0]}).status(200);
+  res.status(200).json({rows: data[0], ...totalRowsData[0][0]});
 });
 
 export default router;

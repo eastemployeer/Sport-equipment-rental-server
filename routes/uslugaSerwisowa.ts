@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
 
   const data = await Database.raw('SELECT `id`, `nazwa`, `szacowany_czas_wykonania`, `cena` FROM `usluga_serwisowa` WHERE `usuniete` = 0 LIMIT ? OFFSET ?', [limit, offset]);
   
-  res.json(data[0]).status(200);
+  res.status(200).json(data[0]);
 });
 
 export default router;

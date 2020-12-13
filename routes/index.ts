@@ -1,5 +1,6 @@
 import express from 'express';
 import klientRouter from './klient';
+import loginRouter from './login';
 import naprawaRouter from './naprawa';
 import pracownikRouter from './pracownik';
 import sprzetRouter from './sprzet';
@@ -10,6 +11,7 @@ import wypozyczenieRouter from './wypozyczenie';
 const router = express.Router();
 
 router.use('/klient', klientRouter);
+router.use('/login', loginRouter);
 router.use('/naprawa', naprawaRouter);
 router.use('/pracownik', pracownikRouter);
 router.use('/sprzet', sprzetRouter);
