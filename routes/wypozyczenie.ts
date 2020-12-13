@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
 
   const data = await Database.raw('SELECT `id`, `poczatek`, `koniec`, `koszt`, `naliczona_kaucja`, `status` FROM `wypozyczenie` ORDER BY `poczatek` DESC, `status` ASC LIMIT ? OFFSET ?', [limit, offset]);
   
-  res.json(data[0]);
+  res.json(data[0]).status(200);
 });
 
 router.get('/klient/:id', async (req, res, next) => {
@@ -19,7 +19,7 @@ router.get('/klient/:id', async (req, res, next) => {
 
   const data = await Database.raw('SELECT `id`, `poczatek`, `koniec`, `koszt`, `naliczona_kaucja`, `status` FROM `wypozyczenie` WHERE `klient_id` = ? ORDER BY `poczatek` DESC, `status` ASC LIMIT ? OFFSET ?', [byUserId, limit, offset]);
 
-  res.json(data[0]);
+  res.json(data[0]).status(200);
 });
 
 router.get('/:id', async (req, res, next) => {
@@ -28,7 +28,7 @@ router.get('/:id', async (req, res, next) => {
   const dataSprzet = await Database.raw('SELECT S.* FROM `wypozyczenie` W JOIN `wypozyczony_sprzet` WS ON WS.`wypozyczenie_id` = W.`id` JOIN `sprzet` S ON S.`id` = WS.`sprzet_id` WHERE W.`id` = ?;', [id]);
   const dataWypozyczenie = await Database.raw('SELECT W.*, K.* FROM `wypozyczenie` W JOIN `klient` K ON K.`id` = W.`klient_id` WHERE W.`id` = ?', [id]);
 
-  res.json({ ...dataWypozyczenie[0][0], sprzet: dataSprzet[0] });
+  res.json({ ...dataWypozyczenie[0][0], sprzet: dataSprzet[0] }).status(200);
 });
 
 router.post('/', async (req, res, next) => {
@@ -66,7 +66,7 @@ router.post('/:id', async (req, res, next) => {
         await Database.raw('UPDATE `wypozyczony_sprzet` SET `kara`=?, `opis_kary`=? WHERE `id` = ?;', [sprzety[i].kara, sprzety[i].opisKary, sprzety[i].id]);
       }
       await trx.commit();
-      res.status(201);
+      res.status(201).end();
     } catch (error) {
       trx.rollback();
       res.status(400).end();
