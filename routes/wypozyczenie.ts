@@ -19,7 +19,9 @@ router.get('/klient/:id', async (req, res, next) => {
 
   const data = await Database.raw('SELECT `id`, `poczatek`, `koniec`, `koszt`, `naliczona_kaucja`, `status` FROM `wypozyczenie` WHERE `klient_id` = ? ORDER BY `poczatek` DESC, `status` ASC LIMIT ? OFFSET ?', [byUserId, limit, offset]);
 
-  res.status(200).json(data[0]);
+  if(data[0].length)
+    res.status(200).json({ ...data[0] });
+  else res.status(404).end();
 });
 
 router.get('/:id', async (req, res, next) => {
@@ -28,7 +30,10 @@ router.get('/:id', async (req, res, next) => {
   const dataSprzet = await Database.raw('SELECT S.* FROM `wypozyczenie` W JOIN `wypozyczony_sprzet` WS ON WS.`wypozyczenie_id` = W.`id` JOIN `sprzet` S ON S.`id` = WS.`sprzet_id` WHERE W.`id` = ?;', [id]);
   const dataWypozyczenie = await Database.raw('SELECT W.*, K.* FROM `wypozyczenie` W JOIN `klient` K ON K.`id` = W.`klient_id` WHERE W.`id` = ?', [id]);
 
+
+  if(dataWypozyczenie[0].length)
   res.status(200).json({ ...dataWypozyczenie[0][0], sprzet: dataSprzet[0] });
+  else res.status(404).end();
 });
 
 router.post('/', async (req, res, next) => {
