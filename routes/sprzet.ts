@@ -15,4 +15,42 @@ router.get('/', async (req, res, next) => {
   res.status(200).json({rows: data[0], ...totalRowsData[0][0]});
 });
 
+router.post('/', async (req, res, next) => {
+  const rodzajSprzetu: string = req.body.rodzajSprzetu;
+  const przeznaczenie: string = req.body.przeznaczenie;
+  const cecha_1_label: string = req.body.cecha_1_label;
+  const cecha_1_value: string = req.body.cecha_1_value;
+  const cecha_2_label: string = req.body.cecha_2_label;
+  const cecha_2_value: string = req.body.cecha_2_value;
+  const cecha_3_label: string = req.body.cecha_3_label;
+  const cecha_3_value: string = req.body.cecha_3_value;
+  const cecha_4_label: string = req.body.cecha_4_label;
+  const cecha_4_value: string = req.body.cecha_4_value;
+  const cena: number = req.body.cena;
+  const rocznik: string = req.body.rocznik;
+  const wartoscSprzetu: number = req.body.wartoscSprzetu;
+
+  try {
+    const data = await Database.raw('INSERT INTO sprzet(rodzaj_sprzetu,przeznaczenie,cecha_1_label,cecha_1_value,cecha_2_label,cecha_2_value,cecha_3_label,cecha_3_value,cecha_4_label,cecha_4_value,cena_wypozyczenia_dzien,blokada,rocznik,wartosc_sprzetu) values (?,?,?,?,?,?,?,?,?,?,?,"dostepny",?,?);', [rodzajSprzetu, przeznaczenie, cecha_1_label, cecha_1_value, cecha_2_label, cecha_2_value, cecha_3_label, cecha_3_value, cecha_4_label, cecha_4_value, cena, rocznik, wartoscSprzetu]);
+  
+    res.status(201).send({id: data[0].insertId});
+  } catch (error) {
+    res.status(400).end();
+  }
+});
+
+router.post('/rodzaj', async (req, res, next) => {
+  const nazwa: string = req.body.nazwa;
+  const rodzajSezonu: string = req.body.rodzajSezonu;
+
+  try {
+    const data = await Database.raw('INSERT INTO rodzaj_sprzetu (nazwa,rodzaj_sezonu) VALUES (?, ?);', [nazwa, rodzajSezonu]);
+  
+    res.status(201).send({id: data[0].insertId});
+  } catch (error) {
+    res.status(400).end();
+  }
+});
+
+
 export default router;

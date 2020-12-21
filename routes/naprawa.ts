@@ -13,4 +13,24 @@ router.get('/', async (req, res, next) => {
   res.status(200).json(data[0]);
 });
 
+router.post('/', async (req, res, next) => {
+  const sprzetId: string = req.body.sprzetId;
+  const koszt: string = req.body.koszt;
+  const data: string = req.body.data;
+  const opis: string = req.body.opis;
+
+  Database.transaction(async trx => {
+    try {
+      const rawData = await Database.raw('INSERT INTO naprawa (sprzet_id,koszt,data,opis,status) VALUES(?,?,?,?,"rozpoczeta");', [sprzetId, koszt, data, opis]);
+      await Database.raw('UPDATE pwrwypozyczalnia.sprzet SET blokada="zablokowano przez serwisanta" WHERE id=?;', [sprzetId]);
+      await trx.commit();
+
+      res.status(201).send({id: rawData[0].insertId});
+    } catch (error) {
+      trx.rollback();
+      res.status(400).end();
+    }
+  })
+});
+
 export default router;
