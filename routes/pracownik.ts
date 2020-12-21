@@ -18,7 +18,7 @@ router.get('/:id', async (req, res, next) => {
   const data = await Database.raw('SELECT`id`,`typ_konta`,`imie`,`nazwisko`,`login`,`blokada`FROM`pracownik`WHERE`id` = ?;', [id]);
 
   if(data[0].length)
-    res.status(200).json({ ...data[0][0] });
+    res.status(200).json(data[0][0]);
   else res.status(404).end();
 });
 

@@ -14,8 +14,8 @@ router.get('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-  const sprzetId: string = req.body.sprzetId;
-  const koszt: string = req.body.koszt;
+  const sprzetId: number = req.body.sprzetId;
+  const koszt: number = req.body.koszt;
   const data: string = req.body.data;
   const opis: string = req.body.opis;
 
