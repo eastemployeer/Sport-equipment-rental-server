@@ -7,11 +7,26 @@ router.get('/', async (req, res, next) => {
   const sezon = String(req.query.sezon);
   const limit = Number(req.query.limit);
   const offset = Number(req.query.offset);
+  const blokada = req.query.blokada;
 
-  const data = await Database.raw("SELECT s.id, s.rodzaj_sprzetu, s.przeznaczenie, s.cecha_1_label,s.cecha_1_value, s.cecha_2_label,s.cecha_2_value, s.cecha_3_label,s.cecha_3_value, s.cecha_4_label,s.cecha_4_value, s.cena_wypozyczenia_dzien FROM sprzet s JOIN rodzaj_sprzetu r ON (s.rodzaj_sprzetu=r.nazwa) WHERE s.blokada='dostepny' AND r.rodzaj_sezonu=? LIMIT ? OFFSET ?;", [sezon, limit, offset]);
+  let totalRowsData, data;
 
-  const totalRowsData = await Database.raw("SELECT COUNT(*) as totalRows FROM sprzet s JOIN rodzaj_sprzetu r ON (s.rodzaj_sprzetu=r.nazwa) WHERE s.blokada='dostepny' AND r.rodzaj_sezonu=?;", [sezon]);
+  console.log('blokada', blokada);
+
+  if(blokada !== undefined)  {
+    data = await Database.raw("SELECT s.id, s.rodzaj_sprzetu, s.przeznaczenie, s.cecha_1_label,s.cecha_1_value, s.cecha_2_label,s.cecha_2_value, s.cecha_3_label,s.cecha_3_value, s.cecha_4_label,s.cecha_4_value, s.cena_wypozyczenia_dzien FROM sprzet s JOIN rodzaj_sprzetu r ON (s.rodzaj_sprzetu=r.nazwa) WHERE s.blokada=? AND r.rodzaj_sezonu=? LIMIT ? OFFSET ?;", [String(blokada), sezon, limit, offset]);
+    totalRowsData = await Database.raw("SELECT COUNT(*) as totalRows FROM sprzet s JOIN rodzaj_sprzetu r ON (s.rodzaj_sprzetu=r.nazwa) WHERE s.blokada=? AND r.rodzaj_sezonu=?;", [String(blokada), sezon]);
+  } else {
+    console.log('blokada', blokada)
+    console.log('sezon', sezon)
+    console.log('limit', limit)
+    console.log('offset', offset)
+    data = await Database.raw("SELECT s.id, s.rodzaj_sprzetu, s.przeznaczenie, s.cecha_1_label,s.cecha_1_value, s.cecha_2_label,s.cecha_2_value, s.cecha_3_label,s.cecha_3_value, s.cecha_4_label,s.cecha_4_value, s.cena_wypozyczenia_dzien FROM sprzet s JOIN rodzaj_sprzetu r ON (s.rodzaj_sprzetu=r.nazwa) WHERE r.rodzaj_sezonu=? LIMIT ? OFFSET ?;", [sezon, limit, offset]);
+    totalRowsData = await Database.raw("SELECT COUNT(*) as totalRows FROM sprzet s JOIN rodzaj_sprzetu r ON (s.rodzaj_sprzetu=r.nazwa) WHERE r.rodzaj_sezonu=?;", [sezon]);
+  }
   
+  console.log('totalRowsData[0]', data[0])
+
   res.status(200).json({rows: data[0], ...totalRowsData[0][0]});
 });
 
