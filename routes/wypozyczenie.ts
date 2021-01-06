@@ -32,7 +32,7 @@ router.get('/:id', async (req, res, next) => {
   const id = req.params.id;
 
   const dataSprzet = await Database.raw('SELECT S.*, WS.kara, WS.opis_kary FROM `wypozyczenie` W JOIN `wypozyczony_sprzet` WS ON WS.`wypozyczenie_id` = W.`id` JOIN `sprzet` S ON S.`id` = WS.`sprzet_id` WHERE W.`id` = ?;', [id]);
-  const dataWypozyczenie = await Database.raw('SELECT W.*, K.* FROM `wypozyczenie` W JOIN `klient` K ON K.`id` = W.`klient_id` WHERE W.`id` = ?', [id]);
+  const dataWypozyczenie = await Database.raw('SELECT K.*, W.* FROM `wypozyczenie` W JOIN `klient` K ON K.`id` = W.`klient_id` WHERE W.`id` = ?', [id]);
 
 
   if(dataWypozyczenie[0].length)
@@ -78,6 +78,7 @@ router.post('/:id', async (req, res, next) => {
       await trx.commit();
       res.status(201).end();
     } catch (error) {
+      console.log('error', error)
       trx.rollback();
       res.status(400).end();
     }
