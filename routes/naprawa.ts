@@ -16,12 +16,11 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   const sprzetId: number = req.body.sprzetId;
   const koszt: number = req.body.koszt;
-  const data: string = req.body.data;
   const opis: string = req.body.opis;
 
   Database.transaction(async trx => {
     try {
-      const rawData = await Database.raw('INSERT INTO naprawa (sprzet_id,koszt,data,opis,status) VALUES(?,?,?,?,"rozpoczeta");', [sprzetId, koszt, data, opis]);
+      const rawData = await Database.raw('INSERT INTO naprawa (sprzet_id,koszt,opis,status) VALUES(?,?,?,"zakończona");', [sprzetId, koszt, opis]);
       await Database.raw('UPDATE pwrwypozyczalnia.sprzet SET blokada="zablokowano przez serwisanta" WHERE id=?;', [sprzetId]);
       await trx.commit();
 

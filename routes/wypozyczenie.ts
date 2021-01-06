@@ -9,7 +9,9 @@ router.get('/', async (req, res, next) => {
 
   const data = await Database.raw('SELECT `id`, `poczatek`, `koniec`, `koszt`, `naliczona_kaucja`, `status` FROM `wypozyczenie` ORDER BY `poczatek` DESC, `status` ASC LIMIT ? OFFSET ?', [limit, offset]);
   
-  res.status(200).json(data[0]);
+  const totalRowsData = await Database.raw("SELECT COUNT(*) as totalRows FROM `wypozyczenie`;");
+
+  res.status(200).json({rows: data[0], ...totalRowsData[0][0]});
 });
 
 router.get('/klient/:id', async (req, res, next) => {
@@ -18,16 +20,18 @@ router.get('/klient/:id', async (req, res, next) => {
   const byUserId = req.params.id;
 
   const data = await Database.raw('SELECT `id`, `poczatek`, `koniec`, `koszt`, `naliczona_kaucja`, `status` FROM `wypozyczenie` WHERE `klient_id` = ? ORDER BY `poczatek` DESC, `status` ASC LIMIT ? OFFSET ?', [byUserId, limit, offset]);
+  
+  const totalRowsData = await Database.raw("SELECT COUNT(*) as totalRows FROM `wypozyczenie` WHERE `klient_id` = ? ;", [byUserId]);
 
   if(data[0].length)
-    res.status(200).json({ ...data[0] });
+    res.status(200).json({rows: data[0], ...totalRowsData[0][0]});
   else res.status(404).end();
 });
 
 router.get('/:id', async (req, res, next) => {
   const id = req.params.id;
 
-  const dataSprzet = await Database.raw('SELECT S.* FROM `wypozyczenie` W JOIN `wypozyczony_sprzet` WS ON WS.`wypozyczenie_id` = W.`id` JOIN `sprzet` S ON S.`id` = WS.`sprzet_id` WHERE W.`id` = ?;', [id]);
+  const dataSprzet = await Database.raw('SELECT S.*, WS.kara, WS.opis_kary FROM `wypozyczenie` W JOIN `wypozyczony_sprzet` WS ON WS.`wypozyczenie_id` = W.`id` JOIN `sprzet` S ON S.`id` = WS.`sprzet_id` WHERE W.`id` = ?;', [id]);
   const dataWypozyczenie = await Database.raw('SELECT W.*, K.* FROM `wypozyczenie` W JOIN `klient` K ON K.`id` = W.`klient_id` WHERE W.`id` = ?', [id]);
 
 
@@ -53,6 +57,7 @@ router.post('/', async (req, res, next) => {
 
       res.status(201).send({id: data[0].insertId});
     } catch (error) {
+      console.log('error', error)
       trx.rollback();
       res.status(400).end();
     }

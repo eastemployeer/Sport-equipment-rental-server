@@ -22,10 +22,20 @@ router.get('/', async (req, res, next) => {
   res.status(200).json({rows: data[0], ...totalRowsData[0][0]});
 });
 
+router.get('/rodzaj', async (req, res, next) => {
+  try {
+    const data = await Database.raw('SELECT `nazwa`, `rodzaj_sezonu` FROM `rodzaj_sprzetu` WHERE 1;');
+  
+    res.status(200).send(data[0]);
+  } catch (error) {
+    res.status(400).end();
+  }
+});
+
 router.get('/:id', async (req, res, next) => {
   const id = req.params.id;
 
-  const data = await Database.raw('SELECT s.id,s.wartosc_sprzetu, s.rocznik, s.rodzaj_sprzetu, s.przeznaczenie, s.cecha_1_label,s.cecha_1_value, s.cecha_2_label,s.cecha_2_value, s.cecha_3_label,s.cecha_3_value, s.cecha_4_label,s.cecha_4_value, s.cena_wypozyczenia_dzien, r.nazwa, r.rodzaj_sezonu FROM sprzet s JOIN rodzaj_sprzetu r ON s.rodzaj_sprzetu = r.nazwa  WHERE s.id = ?', [id]);
+  const data = await Database.raw('SELECT s.id,s.wartosc_sprzetu, s.rocznik, s.blokada, s.rodzaj_sprzetu, s.przeznaczenie, s.cecha_1_label,s.cecha_1_value, s.cecha_2_label,s.cecha_2_value, s.cecha_3_label,s.cecha_3_value, s.cecha_4_label,s.cecha_4_value, s.cena_wypozyczenia_dzien, r.nazwa, r.rodzaj_sezonu FROM sprzet s JOIN rodzaj_sprzetu r ON s.rodzaj_sprzetu = r.nazwa  WHERE s.id = ?', [id]);
 
   if(data[0].length)
     res.status(200).json({ ...data[0][0] });
