@@ -7,7 +7,7 @@ router.get('/', async (req, res, next) => {
   const limit = Number(req.query.limit);
   const offset = Number(req.query.offset);
 
-  const data = await Database.raw('SELECT WUS.*, K.*, US.* FROM `wykonana_usluga_serwisowa` WUS JOIN `usluga_serwisowa` US ON US.`id` = WUS.`usluga_serwisowa_id` JOIN `klient` K ON  K.`id` = WUS.`klient_id` ORDER BY `data_wykonania` DESC, `status` ASC LIMIT ? OFFSET ?', [limit, offset]);
+  const data = await Database.raw('SELECT WUS.*, US.szacowany_czas_wykonania, US.cena, US.nazwa FROM `wykonana_usluga_serwisowa` WUS JOIN `usluga_serwisowa` US ON US.`id` = WUS.`usluga_serwisowa_id` ORDER BY `data_wykonania` DESC, `status` ASC LIMIT ? OFFSET ?', [limit, offset]);
   
   const totalRowsData = await Database.raw("SELECT COUNT(*) as totalRows FROM `wykonana_usluga_serwisowa`;");
 
@@ -19,7 +19,7 @@ router.get('/klient/:id', async (req, res, next) => {
   const limit = Number(req.query.limit);
   const offset = Number(req.query.offset);
 
-  const data = await Database.raw(' SELECT WUS.*, K.*, US.* FROM `wykonana_usluga_serwisowa` WUS JOIN `usluga_serwisowa` US ON US.`id` = WUS.`usluga_serwisowa_id` JOIN `klient` K ON K.`id` = WUS.`klient_id` WHERE K.`id` = ? ORDER BY `data_wykonania` DESC, `status` ASC LIMIT ? OFFSET ?', [byUserId, limit, offset]);
+  const data = await Database.raw(' SELECT WUS.*,  US.szacowany_czas_wykonania, US.cena, US.nazwa FROM `wykonana_usluga_serwisowa` WUS JOIN `usluga_serwisowa` US ON US.`id` = WUS.`usluga_serwisowa_id` JOIN `klient` K ON K.`id` = WUS.`klient_id` WHERE K.`id` = ? ORDER BY `data_wykonania` DESC, `status` ASC LIMIT ? OFFSET ?', [byUserId, limit, offset]);
   
   const totalRowsData = await Database.raw("SELECT COUNT(*) as totalRows FROM `wykonana_usluga_serwisowa` WUS JOIN `klient` K ON K.`id` = WUS.`klient_id` WHERE K.`id` = ?;", [byUserId]);
   
@@ -31,7 +31,7 @@ router.get('/klient/:id', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   const id = req.params.id;
 
-  const data = await Database.raw('SELECT WUS.*,K.`id`,K.`imie`,K.`nazwisko`,K.`email`,K.`telefon`,US.* FROM `wykonana_usluga_serwisowa` WUS JOIN `usluga_serwisowa` US ON US.`id` = WUS.`usluga_serwisowa_id` JOIN `klient` K ON K.`id` = WUS.`klient_id` WHERE WUS.`id` = ?;', [id]);
+  const data = await Database.raw('SELECT WUS.*, US.szacowany_czas_wykonania, US.cena, US.nazwa FROM `wykonana_usluga_serwisowa` WUS JOIN `usluga_serwisowa` US ON US.`id` = WUS.`usluga_serwisowa_id` WHERE WUS.`id` = ?;', [id]);
 
   if(data[0].length)
     res.status(200).json(data[0][0]);
