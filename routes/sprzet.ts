@@ -81,10 +81,9 @@ router.post('/:id', async (req, res, next) => {
   const cena: number = req.body.cena;
   const rocznik: string = req.body.rocznik;
   const wartoscSprzetu: number = req.body.wartoscSprzetu;
-  const blokada: string = req.body.blokada;
 
   try {
-    const data = [{ affectedRows: 1 }];//await Database.raw('INSERT INTO sprzet(rodzaj_sprzetu,przeznaczenie,cecha_1_label,cecha_1_value,cecha_2_label,cecha_2_value,cecha_3_label,cecha_3_value,cecha_4_label,cecha_4_value,cena_wypozyczenia_dzien,blokada,rocznik,wartosc_sprzetu) values (?,?,?,?,?,?,?,?,?,?,?,"dostepny",?,?);', [rodzajSprzetu, przeznaczenie, cecha_1_label, cecha_1_value, cecha_2_label, cecha_2_value, cecha_3_label, cecha_3_value, cecha_4_label, cecha_4_value, cena, rocznik, wartoscSprzetu]);
+    const data = await Database.raw('UPDATE `sprzet` SET `rodzaj_sprzetu`=?,`przeznaczenie`=?,`cecha_1_label`=?,`cecha_1_value`=?,`cecha_2_label`=?,`cecha_2_value`=?,`cecha_3_label`=?,`cecha_3_value`=?,`cecha_4_label`=?,`cecha_4_value`=?,`cena_wypozyczenia_dzien`=?,`rocznik`=?,`wartosc_sprzetu`=? WHERE `id` = ?;', [rodzajSprzetu, przeznaczenie, cecha_1_label, cecha_1_value, cecha_2_label, cecha_2_value, cecha_3_label, cecha_3_value, cecha_4_label, cecha_4_value, cena, rocznik, wartoscSprzetu, id]);
   
     if(data[0].affectedRows)
       res.status(201).end();
@@ -112,8 +111,7 @@ router.delete('/:id', async (req, res, next) => {
   const id = req.params.id;
 
   try {
-    // TODO:
-    const data: any = [{}];//await Database.raw('UPDATE`usluga_serwisowa` SET `usuniete` = 1 WHERE `id` = ?', [id]);
+    const data = await Database.raw('UPDATE `sprzet` SET `blokada` = "usuniety" WHERE `id` = ?', [id]);
     
     if(data[0].affectedRows)
       res.status(201).end();
