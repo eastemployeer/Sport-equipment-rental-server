@@ -8,14 +8,15 @@ router.get('/', async (req, res, next) => {
   const offset = Number(req.query.offset);
 
   const data = await Database.raw('SELECT `id`, `typ_konta`, `imie`, `nazwisko`, `login`, `blokada` FROM `pracownik` WHERE `typ_konta` != "KIEROWNIK" ORDER BY `id` DESC LIMIT ? OFFSET ?', [limit, offset]);
-  
-  res.status(200).json(data[0]);
+  const totalRowsData = await Database.raw('SELECT COUNT(*) as totalRows FROM `pracownik` WHERE `typ_konta` != "KIEROWNIK";');
+
+  res.status(200).json({rows: data[0], ...totalRowsData[0][0]});
 });
 
 router.get('/:id', async (req, res, next) => {
   const id = req.params.id;
 
-  const data = await Database.raw('SELECT`id`,`typ_konta`,`imie`,`nazwisko`,`login`,`blokada`FROM`pracownik`WHERE`id` = ?;', [id]);
+  const data = await Database.raw('SELECT`id`,`typ_konta`,`imie`,`nazwisko`,`login`,`haslo`,`blokada`FROM`pracownik`WHERE`id` = ?;', [id]);
 
   if(data[0].length)
     res.status(200).json(data[0][0]);
