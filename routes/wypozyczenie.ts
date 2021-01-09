@@ -35,6 +35,7 @@ router.get('/:id', async (req, res, next) => {
   const dataWypozyczenie = await Database.raw('SELECT K.*, W.* FROM `wypozyczenie` W JOIN `klient` K ON K.`id` = W.`klient_id` WHERE W.`id` = ?', [id]);
 
 
+  console.log('data', dataSprzet[0]);
   if(dataWypozyczenie[0].length)
   res.status(200).json({ ...dataWypozyczenie[0][0], sprzet: dataSprzet[0] });
   else res.status(404).end();
@@ -73,7 +74,7 @@ router.post('/:id', async (req, res, next) => {
     try {
       await Database.raw('UPDATE `wypozyczenie` SET `status`=? WHERE `id` = ?;', [status, id]);
       for (let i=0; i<sprzety.length; i++){
-        await Database.raw('UPDATE `wypozyczony_sprzet` SET `kara`=?, `opis_kary`=? WHERE `id` = ?;', [sprzety[i].kara, sprzety[i].opisKary, sprzety[i].id]);
+        await Database.raw('UPDATE `wypozyczony_sprzet` SET `kara`=?, `opis_kary`=? WHERE `sprzet_id` = ? AND `wypozyczenie_id` = ?;', [sprzety[i].kara, sprzety[i].opisKary, sprzety[i].id, id]);
       }
       await trx.commit();
       res.status(201).end();
