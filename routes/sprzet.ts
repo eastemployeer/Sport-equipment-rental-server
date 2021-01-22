@@ -81,10 +81,11 @@ router.post('/:id', async (req, res, next) => {
   const cena: number = req.body.cena;
   const rocznik: string = req.body.rocznik;
   const wartoscSprzetu: number = req.body.wartoscSprzetu;
+  const blokada: number = req.body.blokada;
 
   try {
-    const data = await Database.raw('UPDATE `sprzet` SET `rodzaj_sprzetu`=?,`przeznaczenie`=?,`cecha_1_label`=?,`cecha_1_value`=?,`cecha_2_label`=?,`cecha_2_value`=?,`cecha_3_label`=?,`cecha_3_value`=?,`cecha_4_label`=?,`cecha_4_value`=?,`cena_wypozyczenia_dzien`=?,`rocznik`=?,`wartosc_sprzetu`=? WHERE `id` = ?;', [rodzajSprzetu, przeznaczenie, cecha_1_label, cecha_1_value, cecha_2_label, cecha_2_value, cecha_3_label, cecha_3_value, cecha_4_label, cecha_4_value, cena, rocznik, wartoscSprzetu, id]);
-  
+    const data = await Database.raw('UPDATE `sprzet` SET `rodzaj_sprzetu`=?,`przeznaczenie`=?,`cecha_1_label`=?,`cecha_1_value`=?,`cecha_2_label`=?,`cecha_2_value`=?,`cecha_3_label`=?,`cecha_3_value`=?,`cecha_4_label`=?,`cecha_4_value`=?,`cena_wypozyczenia_dzien`=?,`rocznik`=?,`wartosc_sprzetu`=?, `blokada`=? WHERE `id` = ?;', [rodzajSprzetu, przeznaczenie, cecha_1_label, cecha_1_value, cecha_2_label, cecha_2_value, cecha_3_label, cecha_3_value, cecha_4_label, cecha_4_value, cena, rocznik, wartoscSprzetu, blokada, id]);
+
     if(data[0].affectedRows)
       res.status(201).end();
     else 
