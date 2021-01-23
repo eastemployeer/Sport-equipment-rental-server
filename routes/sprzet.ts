@@ -21,8 +21,6 @@ router.get('/', async (req, res, next) => {
     data = await Database.raw("SELECT s.id, s.rodzaj_sprzetu, s.przeznaczenie, s.cecha_1_label,s.cecha_1_value, s.cecha_2_label,s.cecha_2_value, s.cecha_3_label,s.cecha_3_value, s.cecha_4_label,s.cecha_4_value, s.cena_wypozyczenia_dzien FROM sprzet s JOIN rodzaj_sprzetu r ON (s.rodzaj_sprzetu=r.nazwa) WHERE s.blokada=\"dostepny\" AND r.rodzaj_sezonu=? LIMIT ? OFFSET ?;", [sezon, limit, offset]);
     totalRowsData = await Database.raw("SELECT COUNT(*) as totalRows FROM sprzet s JOIN rodzaj_sprzetu r ON (s.rodzaj_sprzetu=r.nazwa) WHERE s.blokada=\"dostepny\" AND r.rodzaj_sezonu=?;", [sezon]);
   }
-
-  console.log('data', data);
   
   res.status(200).json({rows: data[0], ...totalRowsData[0][0]});
 });
