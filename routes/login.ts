@@ -22,9 +22,9 @@ router.post('/pracownik', async (req, res, next) => {
   const login = String(req.body.login);
   const password = String(req.body.password);
 
-  const data = await Database.raw("SELECT * FROM `pracownik` WHERE `login` = ?;", [login]);
+  const data = await Database.raw("SELECT * FROM `pracownik` WHERE `blokada`!=1 AND `login` = ?;", [login]);
 
-  if(password === data[0][0].haslo) 
+  if(data[0].length && password === data[0][0].haslo) 
     res.status(202).json({
       token: '1',
       user: data[0][0]
