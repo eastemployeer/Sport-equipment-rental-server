@@ -1,5 +1,10 @@
 # Sport equipment rental server
 
+<p float="left">
+  <img src="https://github.com/eastemployeer/Sport-equipment-rental-app/blob/main/widok-logowanie2.png" width="30%;" />
+  <img src="https://github.com/eastemployeer/Sport-equipment-rental-app/blob/main/widok-koszyk.png" width="65%" />
+</p>
+
 Application for all season sport equipment rental. It has most features that are present in the real application for rental, such as:
 
 - distinction into 4 types of user accounts
