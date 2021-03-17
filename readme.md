@@ -1,4 +1,4 @@
-# Sport equipment rental app
+# Sport equipment rental server
 
 Application for all season sport equipment rental. It has most features that are present in the real application for rental, such as:
 
@@ -39,15 +39,15 @@ Our page was first designed using [Figma](https://www.figma.com/) and based on t
 
 ## Getting started
 
-Use the package manager [yarn](https://yarnpkg.com/) to install all dependencies in our project.
+1. Use the package manager [yarn](https://yarnpkg.com/) to install all dependencies in our project.
 
 ```bash
 yarn
 ```
 
-Copy file `.env.example` to `.env` and set your own database variables.
+2. Copy file `.env.example` to `.env` and set your own database variables.
 
-Start the server in development mode:
+3. Start the server in development mode:
 
 ```bash
 yarn devstart
