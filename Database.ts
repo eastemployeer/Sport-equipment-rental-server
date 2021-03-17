@@ -1,17 +1,20 @@
-import Knex from 'knex';
+import Knex from "knex";
+import dotenv from "dotenv";
 
-export * from './DatabasedType';
+export * from "./DatabasedType";
+
+dotenv.config();
 
 /**
  * Types of tables are in /types/Knex.d.ts
  */
 const Database = Knex({
-  client: 'mysql',
+  client: "mysql",
   connection: {
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'pwrwypozyczalnia',
+    host: "localhost",
+    user: "root",
+    password: `${process.env.DB_PASSWORD}`,
+    database: `${process.env.DB_NAME}`,
   },
   pool: {
     min: 0,
@@ -19,16 +22,16 @@ const Database = Knex({
   },
   log: {
     warn(message: any) {
-      console.warn('Knex warn: ', message);
+      console.warn("Knex warn: ", message);
     },
     error(message: any) {
-      console.warn('Knex error: ', message);
+      console.warn("Knex error: ", message);
     },
     deprecate(message: any) {
-      console.warn('Knex deprecate: ', message);
+      console.warn("Knex deprecate: ", message);
     },
     debug(message: any) {
-      console.warn('Knex debug: ', message);
+      console.warn("Knex debug: ", message);
     },
   },
 });
