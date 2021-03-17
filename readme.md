@@ -45,6 +45,8 @@ Use the package manager [yarn](https://yarnpkg.com/) to install all dependencies
 yarn
 ```
 
+Copy file `.env.example` to `.env` and set your own database variables.
+
 Start the server in development mode:
 
 ```bash
